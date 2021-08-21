@@ -85,7 +85,7 @@ class G2NetDataset(Dataset):
     
     def apply_qtransform(self, waves, transform):
         waves = np.hstack(waves)
-        waves = waves / np.max(waves)
+        waves = waves / np.max(np.abs(waves))
         waves = torch.from_numpy(waves).float()
         image = transform(waves)
         return image
@@ -182,14 +182,14 @@ class SETIDataModule(pl.LightningDataModule):
             self.train_dataset = G2NetDataset(train_df, transform=train_transform,conf=self.conf)
             self.valid_dataset = G2NetDataset(valid_df, transform=None, conf=self.conf)
             
-        elif stage == 'test':
-            test_df = pd.read_csv(os.path.join(self.conf.data_dir, "sample_submission.csv"))
-            test_df['dir'] = os.path.join(self.conf.data_dir, "test")
-            test_transform = A.Compose([
-                        A.Resize(height=self.conf.height, width=self.conf.width, interpolation=1, always_apply=False, p=1.0),
-                        #A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0, always_apply=False, p=1.0)
-                        ])
-            self.test_dataset = G2NetDataset(test_df, transform=test_transform, conf=self.conf)
+        #elif stage == 'test':
+        #    test_df = pd.read_csv(os.path.join(self.conf.data_dir, "sample_submission.csv"))
+        #    test_df['dir'] = os.path.join(self.conf.data_dir, "test")
+        #    test_transform = A.Compose([
+        #                A.Resize(height=self.conf.height, width=self.conf.width, interpolation=1, always_apply=False, p=1.0),
+        #                #A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0, always_apply=False, p=1.0)
+        #                ])
+        #    self.test_dataset = G2NetDataset(test_df, transform=test_transform, conf=self.conf)
          
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.conf.batch_size, num_workers=4, shuffle=True, pin_memory=True, drop_last=True)
