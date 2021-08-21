@@ -301,7 +301,7 @@ def main():
         precision=16,
         num_sanity_val_steps=10,
         val_check_interval=1.0,
-        sync_batchnorm=True,
+        #sync_batchnorm=True,
         **conf.trainer
             )
 
