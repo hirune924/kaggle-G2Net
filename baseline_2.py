@@ -77,14 +77,15 @@ class G2NetDataset(Dataset):
         self.df = df.reset_index(drop=True)
         self.dir_names = df['dir'].values
         self.labels = df['target'].values
-        self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=32, bins_per_octave=8, window='flattop')
+        self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
+        # hop lengthは変えてみたほうが良いかも
         self.transform = transform
         self.conf = conf
         
     def __len__(self):
         return len(self.df)
     
-    def apply_qtransform(waves, transform):
+    def apply_qtransform(self, waves, transform):
         #print(waves.shape)
         #waves = np.hstack(waves)
         #print(np.max(np.abs(waves), axis=1))
