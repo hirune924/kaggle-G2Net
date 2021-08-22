@@ -105,8 +105,9 @@ class G2NetDataset(Dataset):
         image = self.apply_qtransform(waves, self.wave_transform)
         image = image.squeeze().numpy().transpose(1,2,0)
 
-        img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
-        image = np.array(img_pl)
+        #img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
+        #image = np.array(img_pl)
+        image = cv2.resize(image, (self.conf.width, self.conf.height), interpolation=cv2.INTER_CUBIC)
 
         if self.transform is not None:
             image = self.transform(image=image)['image']
