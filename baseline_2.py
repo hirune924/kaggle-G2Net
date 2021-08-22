@@ -188,7 +188,8 @@ class SETIDataModule(pl.LightningDataModule):
             #            #A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0, always_apply=False, p=1.0)
             #            ])
 
-            self.train_dataset = G2NetDataset(train_df, transform=train_transform,conf=self.conf)
+            #self.train_dataset = G2NetDataset(train_df, transform=train_transform,conf=self.conf)
+            self.train_dataset = G2NetDataset(train_df, transform=None,conf=self.conf)
             self.valid_dataset = G2NetDataset(valid_df, transform=None, conf=self.conf)
             
         #elif stage == 'test':
