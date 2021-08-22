@@ -145,7 +145,7 @@ class SETIDataModule(pl.LightningDataModule):
             
             train_transform = A.Compose([
                         #A.Resize(height=self.conf.high, width=self.conf.width, interpolation=1), 
-                        A.Flip(p=0.5),
+                        #A.Flip(p=0.5),
                         #A.VerticalFlip(p=0.5),
                         #A.HorizontalFlip(p=0.5),
                         #A.ShiftScaleRotate(p=0.5),
@@ -231,7 +231,7 @@ class LitSystem(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         
-        '''
+        #'''
         if self.current_epoch < self.hparams.epoch*0.8:
             # mixup
             alpha = 1.0
@@ -239,9 +239,9 @@ class LitSystem(pl.LightningModule):
             batch_size = x.size()[0]
             index = torch.randperm(batch_size)
             x = lam * x + (1 - lam) * x[index, :]
-            #y = lam * y +  (1 - lam) * y[index]
-            y = y + y[index] - (y * y[index])
-        '''
+            y = lam * y +  (1 - lam) * y[index]
+            #y = y + y[index] - (y * y[index])
+        #'''
         
         y_hat = self.model(x)
         loss = self.criteria(y_hat, y)
