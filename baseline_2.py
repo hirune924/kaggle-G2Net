@@ -105,7 +105,8 @@ class G2NetDataset(Dataset):
         image = self.apply_qtransform(waves, self.wave_transform)
         image = image.squeeze().numpy().transpose(1,2,0)
 
-        image = (image-np.mean(image, axis=(0,1),keepdims=True))/np.std(image, axis=(0,1),keepdims=True)
+        #image = (image-np.mean(image, axis=(0,1),keepdims=True))/np.std(image, axis=(0,1),keepdims=True)
+        image = (image-np.mean(image, axis=1,keepdims=True))/np.std(image, axis=1,keepdims=True)
 
         #img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
         #image = np.array(img_pl)
