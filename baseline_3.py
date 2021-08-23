@@ -73,7 +73,7 @@ conf_base = OmegaConf.create(conf_dict)
 ####################
 
 class G2NetDataset(Dataset):
-    def __init__(self, df, transform=None, conf=None):
+    def __init__(self, df, transform=None, conf=None, train=True):
         self.df = df.reset_index(drop=True)
         self.dir_names = df['dir'].values
         self.labels = df['target'].values
@@ -81,6 +81,7 @@ class G2NetDataset(Dataset):
         # hop lengthは変えてみたほうが良いかも
         self.transform = transform
         self.conf = conf
+        self.train = train
         
     def __len__(self):
         return len(self.df)
@@ -101,17 +102,21 @@ class G2NetDataset(Dataset):
         label1 = torch.tensor([self.labels[idx]]).float()
 
 
-        if torch.rand(1) < 0.50:
-            indx = torch.randint(0,len(self.df),[1]).numpy()[0]
-            img_id = self.df.loc[indx, 'id']
-            file_path = os.path.join(self.dir_names[indx],"{}/{}/{}/{}.npy".format(img_id[0], img_id[1], img_id[2], img_id))
-            waves2 = np.load(file_path)
-            label2 = torch.tensor([self.labels[indx]]).float()
+        if self.train:
+            if torch.rand(1) < 0.50:
+                indx = torch.randint(0,len(self.df),[1]).numpy()[0]
+                img_id = self.df.loc[indx, 'id']
+                file_path = os.path.join(self.dir_names[indx],"{}/{}/{}/{}.npy".format(img_id[0], img_id[1], img_id[2], img_id))
+                waves2 = np.load(file_path)
+                label2 = torch.tensor([self.labels[indx]]).float()
 
-            #alpha = 1.0
-            #lam = 0.5 + np.random.beta(alpha, alpha)/2
-            waves = waves1 + waves2
-            label = label1 + label2 - (label1*label2)
+                #alpha = 1.0
+                #lam = 0.5 + np.random.beta(alpha, alpha)/2
+                waves = waves1 + waves2
+                label = label1 + label2 - (label1*label2)
+            else:
+                waves = waves1
+                label = label1
         else:
             waves = waves1
             label = label1
@@ -210,8 +215,8 @@ class SETIDataModule(pl.LightningDataModule):
             #            ])
 
             #self.train_dataset = G2NetDataset(train_df, transform=train_transform,conf=self.conf)
-            self.train_dataset = G2NetDataset(train_df, transform=None,conf=self.conf)
-            self.valid_dataset = G2NetDataset(valid_df, transform=None, conf=self.conf)
+            self.train_dataset = G2NetDataset(train_df, transform=None,conf=self.conf, train=True)
+            self.valid_dataset = G2NetDataset(valid_df, transform=None, conf=self.conf, train=False)
             
         #elif stage == 'test':
         #    test_df = pd.read_csv(os.path.join(self.conf.data_dir, "sample_submission.csv"))
