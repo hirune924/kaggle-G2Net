@@ -102,7 +102,7 @@ class G2NetDataset(Dataset):
 
 
         if torch.rand(1) < 0.50:
-            indx = torch.randint(0,len(self.df),[1])
+            indx = torch.randint(0,len(self.df),[1]).numpy()
             img_id = self.df.loc[indx, 'id']
             file_path = os.path.join(self.dir_names[indx],"{}/{}/{}/{}.npy".format(img_id[0], img_id[1], img_id[2], img_id))
             waves2 = np.load(file_path)
