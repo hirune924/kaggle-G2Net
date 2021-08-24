@@ -25,7 +25,7 @@ import timm
 from omegaconf import OmegaConf
 
 from sklearn.metrics import roc_auc_score
-from nnAudio.Spectrogram import CQT1992v2
+from nnAudio.Spectrogram import CQT1992v2, CQT2010v2
 from scipy import signal
 ####################
 # Utils
@@ -77,7 +77,8 @@ class G2NetDataset(Dataset):
         self.df = df.reset_index(drop=True)
         self.dir_names = df['dir'].values
         self.labels = df['target'].values
-        self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
+        #self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
+        self.wave_transform = CQT2010v2(sr=2048, fmin=10, fmax=1024, hop_length=32, n_bins=32, bins_per_octave=8, window='flattop')
         # hop lengthは変えてみたほうが良いかも
         self.transform = transform
         self.conf = conf
@@ -110,9 +111,10 @@ class G2NetDataset(Dataset):
                 waves2 = np.load(file_path)
                 label2 = torch.tensor([self.labels[indx]]).float()
 
-                alpha = 32.0
-                lam = np.random.beta(alpha, alpha)
-                waves = waves1 * lam + waves2 * (1-lam)
+                #alpha = 32.0
+                #lam = np.random.beta(alpha, alpha)
+                #waves = waves1 * lam + waves2 * (1-lam)
+                waves = waves1 + waves2
                 label = label1 + label2 - (label1*label2)
             else:
                 waves = waves1
@@ -126,8 +128,8 @@ class G2NetDataset(Dataset):
             label = label1
 
 
-        bHP, aHP = signal.butter(1, (20,750), btype='bandpass', fs=2024)
-        waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
+        #bHP, aHP = signal.butter(1, (20,750), btype='bandpass', fs=2024)
+        #waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
 
         image = self.apply_qtransform(waves, self.wave_transform)
         image = image.squeeze().numpy().transpose(1,2,0)
