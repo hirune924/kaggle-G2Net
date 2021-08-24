@@ -110,9 +110,9 @@ class G2NetDataset(Dataset):
                 waves2 = np.load(file_path)
                 label2 = torch.tensor([self.labels[indx]]).float()
 
-                #alpha = 1.0
-                #lam = 0.5 + np.random.beta(alpha, alpha)/2
-                waves = waves1 + waves2
+                alpha = 32.0
+                lam = np.random.beta(alpha, alpha)
+                waves = waves1 * lam + waves2 * (1-lam)
                 label = label1 + label2 - (label1*label2)
             else:
                 waves = waves1
@@ -120,7 +120,7 @@ class G2NetDataset(Dataset):
 
             if torch.rand(1) < 0.50:
                 waves =  np.roll(waves, np.random.randint(waves.shape[1]), axis=1)
-                
+
         else:
             waves = waves1
             label = label1
