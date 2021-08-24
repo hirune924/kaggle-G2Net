@@ -117,6 +117,10 @@ class G2NetDataset(Dataset):
             else:
                 waves = waves1
                 label = label1
+
+            if torch.rand(1) < 0.50:
+                waves =  np.roll(waves, np.random.randint(waves.shape[1]), axis=1)
+                
         else:
             waves = waves1
             label = label1
