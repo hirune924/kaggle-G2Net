@@ -77,9 +77,9 @@ class G2NetDataset(Dataset):
         self.df = df.reset_index(drop=True)
         self.dir_names = df['dir'].values
         self.labels = df['target'].values
-        #self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
+        self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
         #self.wave_transform = CQT1992v2(sr=2048, fmin=10, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
-        self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=1, bins_per_octave=14, window='flattop')
+        #self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=1, bins_per_octave=14, window='flattop')
         #self.wave_transform = CQT2010v2(sr=2048, fmin=10, fmax=1024, hop_length=32, n_bins=32, bins_per_octave=8, window='flattop')
         # hop lengthは変えてみたほうが良いかも
         self.transform = transform
@@ -136,8 +136,11 @@ class G2NetDataset(Dataset):
         image = self.apply_qtransform(waves, self.wave_transform)
         image = image.squeeze().numpy().transpose(1,2,0)
 
-        image = (image-np.mean(image, axis=(0,1),keepdims=True))/np.std(image, axis=(0,1),keepdims=True)
+        image = cv2.vconcat([image[:,:,0],image[:,:,1],image[:,:,2]])
+
+        #image = (image-np.mean(image, axis=(0,1),keepdims=True))/np.std(image, axis=(0,1),keepdims=True)
         #image = (image-np.mean(image, axis=1,keepdims=True))/np.std(image, axis=1,keepdims=True)
+        image = (image-np.mean(image))/np.std(image)
 
         #img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
         #image = np.array(img_pl)
@@ -145,7 +148,8 @@ class G2NetDataset(Dataset):
 
         if self.transform is not None:
             image = self.transform(image=image)['image']
-        image = torch.from_numpy(image.transpose(2,0,1))#.unsqueeze(dim=0)
+        #image = torch.from_numpy(image.transpose(2,0,1))#.unsqueeze(dim=0)
+        image = torch.from_numpy(image).unsqueeze(dim=0)
 
         return image, label
            
@@ -253,7 +257,7 @@ class LitSystem(pl.LightningModule):
         super().__init__()
         #self.conf = conf
         self.save_hyperparameters(conf)
-        self.model = timm.create_model(model_name=self.hparams.model_name, num_classes=1, pretrained=True, in_chans=3,
+        self.model = timm.create_model(model_name=self.hparams.model_name, num_classes=1, pretrained=True, in_chans=1,
                                        drop_rate=self.hparams.drop_rate, drop_path_rate=self.hparams.drop_path_rate)
         if self.hparams.model_path is not None:
             print(f'load model path: {self.hparams.model_path}')
