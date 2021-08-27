@@ -93,7 +93,8 @@ class G2NetDataset(Dataset):
         #print(waves.shape)
         #waves = np.hstack(waves)
         #print(np.max(np.abs(waves), axis=1))
-        waves = waves / np.max(np.abs(waves), axis=1, keepdims=True)
+        #waves = waves / np.max(np.abs(waves), axis=1, keepdims=True)
+        waves = waves / np.max(waves)
         waves = torch.from_numpy(waves).float()
         image = transform(waves)
         return image
@@ -144,7 +145,7 @@ class G2NetDataset(Dataset):
 
         #img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
         #image = np.array(img_pl)
-        image = cv2.resize(image, (self.conf.width, self.conf.height), interpolation=cv2.INTER_CUBIC)
+        #image = cv2.resize(image, (self.conf.width, self.conf.height), interpolation=cv2.INTER_CUBIC)
 
         if self.transform is not None:
             image = self.transform(image=image)['image']
