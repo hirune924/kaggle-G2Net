@@ -146,10 +146,10 @@ class G2NetDataset(Dataset):
         if self.train:
             trans_id = random.choice([0,1,2])
             image = self.apply_qtransform(waves, self.wave_transform[trans_id])
-            image = (image - self.stat(trans_id)[0])/self.stat(trans_id)[1]
+            image = (image - self.stat[trans_id][0])/self.stat[trans_id][1]
         else:
             image = self.apply_qtransform(waves, self.wave_transform[0])
-            image = (image - self.stat(0)[0])/self.stat(0)[1]
+            image = (image - self.stat[0][0])/self.stat[0][1]
         
         image = image.squeeze().numpy().transpose(1,2,0)
 
