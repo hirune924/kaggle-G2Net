@@ -85,6 +85,10 @@ class G2NetDataset(Dataset):
         #self.wave_transform = CQT1992v2(sr=2048, fmin=10, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
         #self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=1, bins_per_octave=14, window='flattop')
         #self.wave_transform = CQT2010v2(sr=2048, fmin=10, fmax=1024, hop_length=32, n_bins=32, bins_per_octave=8, window='flattop')
+        self.stat = [
+            [0.013205823003608798,0.037445450696502146],
+            [0.009606230606511236,0.02489221471650526], # 10000 sample
+            [0.009523397709568962,0.024628402379527688],] # 10000 sample
         # hop lengthは変えてみたほうが良いかも
         self.transform = transform
         self.conf = conf
@@ -140,9 +144,13 @@ class G2NetDataset(Dataset):
         #waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
 
         if self.train:
-            image = self.apply_qtransform(waves, random.choice(self.wave_transform))
+            trans_id = random.choice([0,1,2])
+            image = self.apply_qtransform(waves, self.wave_transform[trans_id])
+            image = (image - self.stat(trans_id)[0])/self.stat(trans_id)[1]
         else:
             image = self.apply_qtransform(waves, self.wave_transform[0])
+            image = (image - self.stat(0)[0])/self.stat(0)[1]
+        
         image = image.squeeze().numpy().transpose(1,2,0)
 
         image = cv2.vconcat([image[:,:,0],image[:,:,1],image[:,:,2]])
@@ -150,7 +158,7 @@ class G2NetDataset(Dataset):
         #image = (image-np.mean(image, axis=(0,1),keepdims=True))/np.std(image, axis=(0,1),keepdims=True)
         #image = (image-np.mean(image, axis=1,keepdims=True))/np.std(image, axis=1,keepdims=True)
         #image = (image-np.mean(image))/np.std(image)
-        image = (image-0.013205823003608798)/0.037445450696502146
+        #image = (image-0.013205823003608798)/0.037445450696502146
 
         #img_pl = Image.fromarray(image).resize((self.conf.height, self.conf.width), resample=Image.BICUBIC)
         #image = np.array(img_pl)
