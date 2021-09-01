@@ -139,7 +139,10 @@ class G2NetDataset(Dataset):
         #bHP, aHP = signal.butter(1, (20,750), btype='bandpass', fs=2024)
         #waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
 
-        image = self.apply_qtransform(waves, random.choice(self.wave_transform))
+        if self.train:
+            image = self.apply_qtransform(waves, random.choice(self.wave_transform))
+        else:
+            image = self.apply_qtransform(waves, self.wave_transform[0])
         image = image.squeeze().numpy().transpose(1,2,0)
 
         image = cv2.vconcat([image[:,:,0],image[:,:,1],image[:,:,2]])
