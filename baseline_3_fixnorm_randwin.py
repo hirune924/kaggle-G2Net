@@ -258,13 +258,13 @@ class SETIDataModule(pl.LightningDataModule):
         #    self.test_dataset = G2NetDataset(test_df, transform=test_transform, conf=self.conf)
          
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.conf.batch_size, num_workers=4, shuffle=True, pin_memory=True, drop_last=True)
+        return DataLoader(self.train_dataset, batch_size=self.conf.batch_size, num_workers=4*4, shuffle=True, pin_memory=True, drop_last=True)
 
     def val_dataloader(self):
-        return DataLoader(self.valid_dataset, batch_size=self.conf.batch_size, num_workers=4, shuffle=False, pin_memory=True, drop_last=True)
+        return DataLoader(self.valid_dataset, batch_size=self.conf.batch_size, num_workers=4*4, shuffle=False, pin_memory=True, drop_last=True)
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.conf.batch_size, num_workers=4, shuffle=False, pin_memory=True, drop_last=False)
+        return DataLoader(self.test_dataset, batch_size=self.conf.batch_size, num_workers=4*4, shuffle=False, pin_memory=True, drop_last=False)
         
 ####################
 # Lightning Module
