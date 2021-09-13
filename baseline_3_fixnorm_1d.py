@@ -133,8 +133,8 @@ class G2NetDataset(Dataset):
             label = label1
 
 
-        #bHP, aHP = signal.butter(1, (20,750), btype='bandpass', fs=2024)
-        #waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
+        bHP, aHP = signal.butter(1, (20,512), btype='bandpass', fs=2024)
+        waves = np.array([signal.filtfilt(bHP, aHP, w) for w in waves])
 
         #image = self.apply_qtransform(waves, self.wave_transform)
         #image = image.squeeze().numpy().transpose(1,2,0)
@@ -226,8 +226,8 @@ class LitSystem(pl.LightningModule):
                         base_filters=128, # 64 for ResNet1D, 352 for ResNeXt1D
                         kernel_size=16, 
                         stride=2, 
-                        groups=32, 
-                        n_block=48, 
+                        groups=4, 
+                        n_block=8, 
                         n_classes=1, 
                         downsample_gap=6, 
                         increasefilter_gap=12, 
