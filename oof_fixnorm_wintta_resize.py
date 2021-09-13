@@ -238,7 +238,7 @@ def main():
         #test['target'] = predictions
     oof_df[['id', 'target', 'preds']].to_csv(os.path.join(conf.output_dir, "oof.csv"), index=False)
         
-    print(oof_df[['id', 'target']].head())
+    print(oof_df[['id', 'target', 'preds']].head())
     print(model_path)
     
     
