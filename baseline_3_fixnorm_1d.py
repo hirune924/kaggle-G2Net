@@ -227,10 +227,10 @@ class LitSystem(pl.LightningModule):
                         kernel_size=16, 
                         stride=2, 
                         groups=4, 
-                        n_block=8, 
+                        n_block=4, 
                         n_classes=1, 
-                        downsample_gap=6, 
-                        increasefilter_gap=12, 
+                        downsample_gap=2, 
+                        increasefilter_gap=4, 
                         use_do=True)
         if self.hparams.model_path is not None:
             print(f'load model path: {self.hparams.model_path}')
