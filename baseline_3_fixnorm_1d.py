@@ -227,7 +227,7 @@ class LitSystem(pl.LightningModule):
                         kernel_size=64, 
                         stride=2, 
                         groups=4, 
-                        n_block=4, 
+                        n_block=2, 
                         n_classes=1, 
                         downsample_gap=2, 
                         increasefilter_gap=4, 
