@@ -224,7 +224,7 @@ class LitSystem(pl.LightningModule):
         self.model = ResNet1D(
                         in_channels=3, 
                         base_filters=128, # 64 for ResNet1D, 352 for ResNeXt1D
-                        kernel_size=16, 
+                        kernel_size=64, 
                         stride=2, 
                         groups=4, 
                         n_block=4, 
