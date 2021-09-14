@@ -14,7 +14,7 @@ class CNN1d(nn.Module):
             nn.Conv1d(256, 256,kernel_size=64, stride=2, padding=32),
             nn.BatchNorm1d(256),nn.ReLU(),nn.MaxPool1d(kernel_size=2, stride=1))
 
-        self.fc = nn.Sequential(nn.AdaptiveAvgPool1d(1),nn.Flatten,nn.Linear(256,1))
+        self.fc = nn.Sequential(nn.AdaptiveAvgPool1d(1),nn.Flatten(),nn.Linear(256,1))
     def forward(self, x):
         x = self.cnn(x)
         x = self.fc(x)
