@@ -226,7 +226,7 @@ class LitSystem(pl.LightningModule):
                         out_channels=256,
                         att_channels=256,
                         n_len_seg=32,
-                        n_classes=1,device=None)
+                        n_classes=1,device=None, verbose=True)
         if self.hparams.model_path is not None:
             print(f'load model path: {self.hparams.model_path}')
             self.model = load_pytorch_model(self.hparams.model_path, self.model, ignore_suffix='model')
