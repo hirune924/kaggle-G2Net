@@ -109,7 +109,7 @@ class G2NetDataset(Dataset):
 
 
         if self.train:
-            if torch.rand(1) < 0.00:
+            if torch.rand(1) < 0.50:
                 indx = torch.randint(0,len(self.df),[1]).numpy()[0]
                 img_id = self.df.loc[indx, 'id']
                 file_path = os.path.join(self.dir_names[indx],"{}/{}/{}/{}.npy".format(img_id[0], img_id[1], img_id[2], img_id))
