@@ -16,6 +16,7 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 
 from sklearn.model_selection import StratifiedKFold
