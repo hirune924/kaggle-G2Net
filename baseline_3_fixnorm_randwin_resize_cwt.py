@@ -204,9 +204,9 @@ class G2NetDataset(Dataset):
         #waves = waves / np.max(np.abs(waves), axis=1, keepdims=True)
         #waves = waves / np.max(waves)
         waves = waves / 4.6152116213830774e-20
-        waves = torch.from_numpy(waves).float()
+        waves = torch.from_numpy(waves).float().unsqueeze(dim=0)
         image = transform(waves)
-        return image
+        return image[0]
 
     def __getitem__(self, idx):
         img_id = self.df.loc[idx, 'id']
