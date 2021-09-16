@@ -27,7 +27,7 @@ from omegaconf import OmegaConf
 from sklearn.metrics import roc_auc_score
 from nnAudio.Spectrogram import CQT1992v2, CQT2010v2
 from scipy import signal
-from model.cnn1dorg import CNN1d
+from model.cnn1dorg import CNN1d_2
 ####################
 # Utils
 ####################
@@ -221,7 +221,7 @@ class LitSystem(pl.LightningModule):
         #self.model = timm.create_model(model_name=self.hparams.model_name, num_classes=1, pretrained=True, in_chans=1,
         #                               drop_rate=self.hparams.drop_rate, drop_path_rate=self.hparams.drop_path_rate)
 
-        self.model = CNN1d()
+        self.model = CNN1d_2()
         if self.hparams.model_path is not None:
             print(f'load model path: {self.hparams.model_path}')
             self.model = load_pytorch_model(self.hparams.model_path, self.model, ignore_suffix='model')
