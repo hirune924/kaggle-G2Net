@@ -115,6 +115,7 @@ class CWT(nn.Module):
         return wavelet_bank_real, wavelet_bank_imag
     
     def forward(self, x):
+        x = x.unsqueeze(dim=0)
         border_crop = self.border_crop // self.stride
         start = border_crop
         end = (-border_crop) if border_crop > 0 else None
@@ -145,7 +146,7 @@ class CWT(nn.Module):
         out_imag = out_imag[:, :, :, start:end]
         
         scalograms = torch.sqrt(out_real ** 2 + out_imag ** 2)
-        return scalograms
+        return scalograms[0]
 ####################
 # Config
 ####################
@@ -204,9 +205,9 @@ class G2NetDataset(Dataset):
         #waves = waves / np.max(np.abs(waves), axis=1, keepdims=True)
         #waves = waves / np.max(waves)
         waves = waves / 4.6152116213830774e-20
-        waves = torch.from_numpy(waves).float().unsqueeze(dim=0)
+        waves = torch.from_numpy(waves).float()#.unsqueeze(dim=0)
         image = transform(waves)
-        return image[0]
+        return image#[0]
 
     def __getitem__(self, idx):
         img_id = self.df.loc[idx, 'id']
