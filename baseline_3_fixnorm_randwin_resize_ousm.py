@@ -314,8 +314,8 @@ class LitSystem(pl.LightningModule):
 
         if len(losses.shape) == 2:
             losses = losses.mean(1)
-        print(losses.shape)
-        print(int(self.hparams.batch_size * 0.6))
+        #print(losses.shape)
+        #print(int(self.hparams.batch_size * 0.6))
         _, idxs = losses.topk(int(self.hparams.batch_size * 0.6), largest=False)
         losses = losses.index_select(0, idxs)
         
