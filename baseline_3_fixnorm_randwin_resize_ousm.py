@@ -312,7 +312,7 @@ class LitSystem(pl.LightningModule):
         y_hat = self.model(x)
         losses = self.criteria(y_hat, y)
 
-        _, idxs = losses.topk(int(self.hparams.batch_size * 0.8), largest=False)
+        _, idxs = losses.topk(int(self.hparams.batch_size * 0.6), largest=False)
         losses = losses.index_select(0, idxs)
         
         return losses.mean()
