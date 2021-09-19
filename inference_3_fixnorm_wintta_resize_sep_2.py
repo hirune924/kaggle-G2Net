@@ -162,7 +162,7 @@ class SETIDataModule(pl.LightningDataModule):
 # ====================================================
 def inference(models, test_loader):
     tk0 = tqdm(enumerate(test_loader), total=len(test_loader))
-    raw_probs = [[]] * len(models)
+    raw_probs =  [[] for i in range(len(models))]
     probs = []
     probs_flattop = []
     probs_blackmanharris = []
