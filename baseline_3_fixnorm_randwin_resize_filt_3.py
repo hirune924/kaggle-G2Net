@@ -55,7 +55,7 @@ def load_pytorch_model(ckpt_name, model, ignore_suffix='model'):
 
 def filt(waves):
     #window = signal.tukey(4096,0.1)
-    waves = [pycbc.filter.resample.highpass_fir(pycbc.types.TimeSeries(w, epoch=0, delta_t=1.0/2048), frequency=10, order=100) for w in waves]
+    waves = [pycbc.filter.resample.highpass_fir(pycbc.types.TimeSeries(w, epoch=0, delta_t=1.0/2048), frequency=20, order=100) for w in waves]
     waves = [pycbc.filter.resample.notch_fir(w, f1=30, f2=80, order=10, beta=5) for w in waves]
     waves = [pycbc.filter.resample.lowpass_fir(w, frequency=512, order=5) for w in waves]
     waves = np.array([np.array(w) for w in waves])
@@ -92,9 +92,9 @@ class G2NetDataset(Dataset):
         self.dir_names = df['dir'].values
         self.labels = df['target'].values
         self.wave_transform = [
-            CQT1992v2(sr=2048, fmin=10, fmax=256, hop_length=8, bins_per_octave=8, window='flattop', filter_scale=1.5),
-            CQT1992v2(sr=2048, fmin=10, fmax=256, hop_length=8, bins_per_octave=8, window='blackmanharris', filter_scale=1.5),
-            CQT1992v2(sr=2048, fmin=10, fmax=256, hop_length=8, bins_per_octave=8, window='nuttall', filter_scale=1.5)]
+            CQT1992v2(sr=2048, fmin=10, fmax=512, hop_length=8, bins_per_octave=4, window='flattop', filter_scale=3.0),
+            CQT1992v2(sr=2048, fmin=10, fmax=512, hop_length=8, bins_per_octave=4, window='blackmanharris', filter_scale=3.0),
+            CQT1992v2(sr=2048, fmin=10, fmax=512, hop_length=8, bins_per_octave=4, window='nuttall', filter_scale=3.0)]
         #self.wave_transform = CQT1992v2(sr=2048, fmin=10, fmax=1024, hop_length=8, bins_per_octave=8, window='flattop')
         #self.wave_transform = CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=1, bins_per_octave=14, window='flattop')
         #self.wave_transform = CQT2010v2(sr=2048, fmin=10, fmax=1024, hop_length=32, n_bins=32, bins_per_octave=8, window='flattop')
