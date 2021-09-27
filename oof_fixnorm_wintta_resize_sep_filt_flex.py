@@ -76,7 +76,7 @@ conf_dict = {'batch_size': 8,#32,
              'model_path': None,
              'output_dir': './',
              'seed': 2021,
-             'snap': 1
+             'snap': 1,
              'fmin': 10,
              'fmax': 512,
              'scale': 1.5}
